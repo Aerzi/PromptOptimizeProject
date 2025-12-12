@@ -27,3 +27,19 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(156, 163, 175, 0.8);
 }
+
+/* Drag and Drop Ghost Style - Compact to prevent layout jumping */
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #f3f4f6;
+    border: 2px dashed #d1d5db;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    overflow: hidden;
+    padding: 0 !important;
+    margin-bottom: 0.5rem;
+}
+.sortable-ghost * {
+    visibility: hidden;
+}

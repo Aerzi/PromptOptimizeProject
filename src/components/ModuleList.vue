@@ -5,8 +5,9 @@
       :group="{ name: 'g1' }"
       item-key="id"
       handle=".drag-handle"
-      ghost-class="opacity-50"
+      ghost-class="sortable-ghost"
       class="pb-4 min-h-[50px]" 
+      @change="onDragChange"
     >
       <template #item="{ element, index }">
         <ModuleItem 
@@ -26,9 +27,26 @@
 
 <script setup lang="ts">
 import { usePromptStore } from '@/stores/promptStore';
+import type { PromptModule } from '@/types/prompt';
 import draggable from 'vuedraggable';
 import ModuleItem from './ModuleItem.vue';
 
 const store = usePromptStore();
+
+const updateChildrenLevels = (mod: PromptModule) => {
+    if (mod.children && mod.children.length > 0) {
+        mod.children.forEach(child => {
+            child.level = mod.level + 1;
+            updateChildrenLevels(child);
+        });
+    }
+};
+
+const onDragChange = (evt: any) => {
+    if (evt.added) {
+        evt.added.element.level = 1;
+        updateChildrenLevels(evt.added.element);
+    }
+};
 </script>
 

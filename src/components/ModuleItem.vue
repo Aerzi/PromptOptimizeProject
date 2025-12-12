@@ -94,13 +94,18 @@
         </div>
 
         <!-- Nested Children -->
-        <div class="pl-4 border-l-2 border-black/5">
+        <div class="pl-4 border-l-2 border-black/5 mt-2">
             <draggable 
                 v-model="module.children" 
                 :group="{ name: 'g1' }"
                 item-key="id"
                 handle=".drag-handle"
-                ghost-class="opacity-50"
+                ghost-class="sortable-ghost"
+                class="min-h-[40px] rounded-md transition-colors duration-200 pb-2"
+                :class="[
+                    module.children.length === 0 ? 'bg-black/5' : ''
+                ]"
+                @change="onDragChange"
             >
                 <template #item="{ element, index }">
                     <ModuleItem 
@@ -218,6 +223,22 @@ const addChild = () => {
     props.module.children.push(newChild);
     // Auto expand parent
     props.module.collapsed = false;
+};
+
+const updateChildrenLevels = (mod: PromptModule) => {
+    if (mod.children && mod.children.length > 0) {
+        mod.children.forEach(child => {
+            child.level = mod.level + 1;
+            updateChildrenLevels(child);
+        });
+    }
+};
+
+const onDragChange = (evt: any) => {
+    if (evt.added) {
+        evt.added.element.level = props.module.level + 1;
+        updateChildrenLevels(evt.added.element);
+    }
 };
 </script>
 
